@@ -31,7 +31,16 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+*   **Specification Primacy**: Specification of intent (WHAT) must precede implementation (HOW).
+*   **Progressive Complexity**: All content must be rigorously chunked to match learner tiers (A1–C2).
+*   **Factual Accuracy**: Every claim, process, and output must be verified.
+*   **Coherent Pedagogical Structure**: All chapters must follow the arc: Foundation → Application → Integration → Validation → Mastery.
+*   **Intelligence Accumulation**: Content must inherit and build upon all previously established intelligence.
+*   **Anti-Convergence Variation**: Teaching modalities must vary between consecutive chapters.
+*   **Minimal Sufficient Content**: Only essential instructional content is permitted.
+*   **Meta-Commentary Prohibition**: Internal scaffolding is prohibited; prompts must rely on Active Collaboration and Self-Reflection.
+*   **Agent Coordination**: All agent handoffs must maintain reasoning continuity.
+*   **Success Definition**: Zero violations of specifications/mandates, demonstrated student comprehension (>=80%), verified composition of reusable intelligence by learner.
 
 ## Project Structure
 

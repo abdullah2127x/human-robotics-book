@@ -1,55 +1,82 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version change:  → 1.0.0
+List of modified principles:
+  - PRINCIPLE_1_NAME: Specification Primacy (added)
+  - PRINCIPLE_2_NAME: Progressive Complexity (added)
+  - PRINCIPLE_3_NAME: Factual Accuracy (added)
+  - PRINCIPLE_4_NAME: Coherent Pedagogical Structure (added)
+  - PRINCIPLE_5_NAME: Intelligence Accumulation (added)
+  - PRINCIPLE_6_NAME: Anti-Convergence Variation (added)
+  - PRINCIPLE_7_NAME: Minimal Sufficient Content (added)
+Added sections: The Core Pedagogical Strategy (4-Layer Framework), Quality and Enforcement
+Removed sections: None
+Templates requiring updates:
+  - .specify/templates/plan-template.md: ⚠ pending
+  - .specify/templates/spec-template.md: ⚠ pending
+  - .specify/templates/tasks-template.md: ⚠ pending
+  - .specify/templates/commands/*.md: ⚠ pending
+Follow-up TODOs: TODO(RATIFICATION_DATE): Original adoption date unknown
+-->
+# Content Constitution: Physical AI & Humanoid Robotics Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Specification Primacy
+Specification of intent (WHAT) must precede implementation (HOW). Code exists solely as the output of a verified specification.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Progressive Complexity
+All content must be rigorously chunked to match learner tiers (A1–C2), ensuring cognitive load remains appropriate.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Factual Accuracy
+Every claim, process, and output must be verified using Execution Logs, Test Suites, and Official API Documentation across Robotics, SaaS, and Data Science contexts.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Coherent Pedagogical Structure
+All chapters must follow the arc: Foundation → Application → Integration → Validation → Mastery.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Intelligence Accumulation
+Content must inherit and build upon all previously established intelligence. Chapters must never reset context.
 
-### [PRINCIPLE_6_NAME]
+### Anti-Convergence Variation
+Teaching modalities must vary between consecutive chapters (e.g., Error Analysis, Socratic Dialogue, Reverse Specification).
 
+### Minimal Sufficient Content
+Only essential instructional content is permitted. Final sections such as “Summary” or “Key Takeaways” are explicitly prohibited.
 
-[PRINCIPLE__DESCRIPTION]
+## The Core Pedagogical Strategy (4-Layer Framework)
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### 1. Manual Foundation
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+Students must first demonstrate independent comprehension, correct execution, and the ability to recognize errors. Advancement requires validated conceptual mastery.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### 2. AI Collaboration
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+Students develop prompting, validation, and cross-checking skills through structured bidirectional learning using the Three Roles Framework. Advancement requires consistent pattern recognition indicating emerging reusability.
+
+### 3. Intelligence Design
+
+Students convert identified patterns into reusable Skills or Subagents using Persona, Questions, and Principles. Advancement requires evidence of intelligence accumulation across at least three components and demonstrated Specification Capability.
+
+### 4. Spec-Driven Integration
+
+Students orchestrate accumulated intelligence to complete a capstone project governed entirely by clear, testable specifications.
+
+## Quality and Enforcement
+
+### Meta-Commentary Prohibition
+Internal scaffolding (“AI is teaching you,” “Here is the framework used”) is prohibited. Instead, prompts must rely on Active Collaboration and Self-Reflection without revealing internal mechanics.
+
+### Agent Coordination
+All agent handoffs must maintain reasoning continuity. Major decisions must be justified through the underlying framework without referencing system internals.
+
+### Success Definition
+Success is defined by:
+
+1. Zero violations of specifications or mandates.
+2. Demonstrated student comprehension at 80% or higher.
+3. Verified composition of reusable intelligence by the learner.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution supersedes all other practices; Amendments require documentation, approval, migration plan; All PRs/reviews must verify compliance; Complexity must be justified.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Original adoption date unknown | **Last Amended**: 2025-12-07
