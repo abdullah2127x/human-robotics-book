@@ -1,22 +1,15 @@
 <!--
 Sync Impact Report:
-Version change:  → 1.0.0
-List of modified principles:
-  - PRINCIPLE_1_NAME: Specification Primacy (added)
-  - PRINCIPLE_2_NAME: Progressive Complexity (added)
-  - PRINCIPLE_3_NAME: Factual Accuracy (added)
-  - PRINCIPLE_4_NAME: Coherent Pedagogical Structure (added)
-  - PRINCIPLE_5_NAME: Intelligence Accumulation (added)
-  - PRINCIPLE_6_NAME: Anti-Convergence Variation (added)
-  - PRINCIPLE_7_NAME: Minimal Sufficient Content (added)
-Added sections: The Core Pedagogical Strategy (4-Layer Framework), Quality and Enforcement
+Version change: 1.0.0 → 1.0.1
+List of modified principles: None
+Added sections: Amendment Process
 Removed sections: None
 Templates requiring updates:
-  - .specify/templates/plan-template.md: ⚠ pending
-  - .specify/templates/spec-template.md: ⚠ pending
-  - .specify/templates/tasks-template.md: ⚠ pending
-  - .specify/templates/commands/*.md: ⚠ pending
-Follow-up TODOs: TODO(RATIFICATION_DATE): Original adoption date unknown
+  - .specify/templates/plan-template.md: ✅ updated
+  - .specify/templates/spec-template.md: ✅ updated
+  - .specify/templates/tasks-template.md: ✅ updated
+  - .specify/templates/commands/*.md: ⚠ pending (no files found)
+Follow-up TODOs: None
 -->
 # Content Constitution: Physical AI & Humanoid Robotics Constitution
 
@@ -79,4 +72,11 @@ Success is defined by:
 ## Governance
 This constitution supersedes all other practices; Amendments require documentation, approval, migration plan; All PRs/reviews must verify compliance; Complexity must be justified.
 
-**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): Original adoption date unknown | **Last Amended**: 2025-12-07
+### Amendment Process
+
+1.  **Proposal**: Amendments are initiated via a formal proposal document, outlining the proposed changes and their rationale.
+2.  **Review**: Proposals undergo a review and discussion period by relevant stakeholders (e.g., lead architect, core development team).
+3.  **Approval**: Amendments require explicit approval from the lead architect and/or a designated governance committee.
+4.  **Communication**: Approved amendments, along with their version increment and effective date, are communicated to all project members.
+
+**Version**: 1.0.1 | **Ratified**: 2025-12-07 | **Last Amended**: 2025-12-07
