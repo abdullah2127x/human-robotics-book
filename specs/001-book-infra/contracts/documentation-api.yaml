@@ -1,0 +1,351 @@
+# Documentation API Contract for Physical AI & Humanoid Robotics Book
+
+openapi: 3.0.0
+info:
+  title: Physical AI & Humanoid Robotics Book API
+  description: API for accessing book content and related resources
+  version: 1.0.0
+  contact:
+    name: Book Infrastructure Team
+    email: book-infra@example.com
+
+servers:
+  - url: https://api.physicalai-humanoidrobotics.com/v1
+    description: Production server
+  - url: https://staging.api.physicalai-humanoidrobotics.com/v1
+    description: Staging server
+
+paths:
+  /modules:
+    get:
+      summary: Get all book modules
+      description: Retrieve a list of all book modules with basic information
+      responses:
+        '200':
+          description: List of book modules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  modules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BookModule'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /modules/{moduleId}:
+    get:
+      summary: Get module details
+      description: Retrieve detailed information about a specific book module
+      parameters:
+        - name: moduleId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the module to retrieve
+      responses:
+        '200':
+          description: Module details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  module:
+                    $ref: '#/components/schemas/BookModule'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /modules/{moduleId}/pages:
+    get:
+      summary: Get module pages
+      description: Retrieve a list of all pages within a specific module
+      parameters:
+        - name: moduleId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the module
+      responses:
+        '200':
+          description: List of pages in the module
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Page'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /pages/{pageId}:
+    get:
+      summary: Get page content
+      description: Retrieve content of a specific page
+      parameters:
+        - name: pageId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the page to retrieve
+      responses:
+        '200':
+          description: Page content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    $ref: '#/components/schemas/Page'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /search:
+    get:
+      summary: Search content
+      description: Search across all book content
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+          description: Maximum number of results to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Offset for pagination
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SearchResult'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    BookModule:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - order
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the module
+          example: "intro"
+        title:
+          type: string
+          description: Display title of the module
+          example: "Introduction & Physical AI Principles"
+        description:
+          type: string
+          description: Brief description of the module content
+          example: "Foundational concepts for Physical AI"
+        order:
+          type: integer
+          description: Order in which the module appears in the book
+          example: 0
+        pagesCount:
+          type: integer
+          description: Number of pages in the module
+          example: 5
+        createdAt:
+          type: string
+          format: date-time
+          description: When the module was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the module was last updated
+
+    Page:
+      type: object
+      required:
+        - id
+        - title
+        - moduleId
+        - content
+        - order
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the page
+          example: "intro-physical-ai"
+        title:
+          type: string
+          description: Title of the page
+          example: "Understanding Physical AI"
+        moduleId:
+          type: string
+          description: ID of the module this page belongs to
+          example: "intro"
+        content:
+          type: string
+          description: Content of the page in Markdown format
+          example: "# Understanding Physical AI\n\nPhysical AI is..."
+        order:
+          type: integer
+          description: Order of the page within its module
+          example: 1
+        slug:
+          type: string
+          description: URL-friendly identifier
+          example: "understanding-physical-ai"
+        metadata:
+          type: object
+          description: Additional metadata for the page
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: When the page was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the page was last updated
+
+    SearchResult:
+      type: object
+      required:
+        - id
+        - title
+        - moduleId
+        - snippet
+        - score
+      properties:
+        id:
+          type: string
+          description: ID of the matching page
+          example: "intro-physical-ai"
+        title:
+          type: string
+          description: Title of the matching page
+          example: "Understanding Physical AI"
+        moduleId:
+          type: string
+          description: Module ID of the matching page
+          example: "intro"
+        moduleTitle:
+          type: string
+          description: Title of the module containing the page
+          example: "Introduction & Physical AI Principles"
+        snippet:
+          type: string
+          description: Snippet of content showing the match
+          example: "...Physical AI is the intersection of digital intelligence and physical systems..."
+        score:
+          type: number
+          format: float
+          description: Relevance score of the match
+          example: 0.95
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: "INVALID_INPUT"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "The provided input is invalid"
+        details:
+          type: object
+          description: Additional error details (optional)
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  parameters:
+    moduleId:
+      name: moduleId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID of the module
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+
+security:
+  - apiKey: []
