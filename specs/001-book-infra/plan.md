@@ -1,53 +1,47 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Book Infrastructure Initialization
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Branch**: `001-book-infra` | **Date**: 2025-12-08 | **Spec**: specs/001-book-infra/spec.md
+**Input**: Feature specification from `/specs/001-book-infra/spec.md`
 
 **Note**: This template is filled in by the `/sp.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+Initialize the base web infrastructure for the "Physical AI & Humanoid Robotics" book using Docusaurus v3 with TypeScript and Classic theme. Configure core site metadata, navigation structure, and sidebar organization to match the book's module structure. Set up GitHub Pages deployment and prepare styling infrastructure with PostCSS/Tailwind for future customization.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5.0+ (required for Docusaurus v3 with React components)
+**Primary Dependencies**: Docusaurus v3, React, Node.js 18+, npm/yarn package manager
+**Storage**: N/A (static site generator, no database required)
+**Testing**: Jest for unit tests, Cypress for end-to-end tests (to be implemented later)
+**Target Platform**: Web (static site for GitHub Pages hosting)
+**Project Type**: Web/documentation site
+**Performance Goals**: Page load within 3 seconds on 3G connection, subsequent navigations within 1 second with browser cache
+**Constraints**: Must support WCAG 2.1 AA accessibility compliance, HTTPS serving, and responsive design
+**Scale/Scope**: Static documentation site for book content with 4 main modules (Intro, Module 1-3)
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-*   **Specification Primacy**: Specification of intent (WHAT) must precede implementation (HOW).
-*   **Progressive Complexity**: All content must be rigorously chunked to match learner tiers (A1–C2).
-*   **Factual Accuracy**: Every claim, process, and output must be verified.
-*   **Coherent Pedagogical Structure**: All chapters must follow the arc: Foundation → Application → Integration → Validation → Mastery.
-*   **Intelligence Accumulation**: Content must inherit and build upon all previously established intelligence.
-*   **Anti-Convergence Variation**: Teaching modalities must vary between consecutive chapters.
-*   **Minimal Sufficient Content**: Only essential instructional content is permitted.
-*   **Meta-Commentary Prohibition**: Internal scaffolding is prohibited; prompts must rely on Active Collaboration and Self-Reflection.
-*   **Agent Coordination**: All agent handoffs must maintain reasoning continuity.
-*   **Success Definition**: Zero violations of specifications/mandates, demonstrated student comprehension (>=80%), verified composition of reusable intelligence by learner.
+*   **Specification Primacy**: Specification of intent (WHAT) must precede implementation (HOW). ✅
+*   **Progressive Complexity**: All content must be rigorously chunked to match learner tiers (A1–C2). ✅
+*   **Factual Accuracy**: Every claim, process, and output must be verified. ✅
+*   **Coherent Pedagogical Structure**: All chapters must follow the arc: Foundation → Application → Integration → Validation → Mastery. ✅
+*   **Intelligence Accumulation**: Content must inherit and build upon all previously established intelligence. ✅
+*   **Anti-Convergence Variation**: Teaching modalities must vary between consecutive chapters. ✅
+*   **Minimal Sufficient Content**: Only essential instructional content is permitted. ✅
+*   **Meta-Commentary Prohibition**: Internal scaffolding is prohibited; prompts must rely on Active Collaboration and Self-Reflection. ✅
+*   **Agent Coordination**: All agent handoffs must maintain reasoning continuity. ✅
+*   **Success Definition**: Zero violations of specifications/mandates, demonstrated student comprehension (>=80%), verified composition of reusable intelligence by learner. ✅
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
+specs/001-book-infra/
 ├── plan.md              # This file (/sp.plan command output)
 ├── research.md          # Phase 0 output (/sp.plan command)
 ├── data-model.md        # Phase 1 output (/sp.plan command)
@@ -57,51 +51,29 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
+website/                 # Docusaurus project root
+├── blog/                # Blog posts (if needed)
+├── docs/                # Documentation files organized by modules
+│   ├── intro/
+│   ├── module1/
+│   ├── module2/
+│   └── module3/
 ├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+│   ├── components/      # Custom React components
+│   ├── css/             # Custom CSS and Tailwind setup
+│   └── pages/           # Custom pages
+├── static/              # Static assets
+├── docusaurus.config.ts # Main configuration file
+├── sidebars.ts          # Sidebar navigation configuration
+├── package.json         # Project dependencies and scripts
+├── tsconfig.json        # TypeScript configuration
+├── postcss.config.js    # PostCSS configuration for Tailwind
+└── tailwind.config.js   # Tailwind CSS configuration
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Web application structure selected with Docusaurus as the documentation framework. All documentation will be organized in the docs/ directory following the book's module structure (Intro, Module 1-3). Configuration files will support TypeScript, Tailwind CSS, and GitHub Pages deployment.
 
 ## Complexity Tracking
 
