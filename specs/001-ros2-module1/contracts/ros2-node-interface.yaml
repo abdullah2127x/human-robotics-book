@@ -1,0 +1,230 @@
+# ROS 2 Node Interface Contract
+# Defines the standard interface patterns for ROS 2 nodes in the educational module
+
+openapi: 3.0.0
+info:
+  title: ROS 2 Node Interface Contract
+  description: Standard interface definitions for ROS 2 nodes used in educational content
+  version: 1.0.0
+  contact:
+    name: Physical AI & Humanoid Robotics Education Team
+    email: education@physical-ai-humanoid-robotics.org
+
+servers:
+  - url: http://localhost:8080
+    description: Local ROS 2 development environment
+
+paths:
+  /nodes/{node_name}/publishers:
+    get:
+      summary: Get list of publishers for a node
+      parameters:
+        - name: node_name
+          in: path
+          required: true
+          description: Name of the ROS 2 node
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of publishers for the node
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  node_name:
+                    type: string
+                    description: Name of the node
+                  publishers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublisherInfo'
+        '404':
+          description: Node not found
+
+  /nodes/{node_name}/subscribers:
+    get:
+      summary: Get list of subscribers for a node
+      parameters:
+        - name: node_name
+          in: path
+          required: true
+          description: Name of the ROS 2 node
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of subscribers for the node
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  node_name:
+                    type: string
+                    description: Name of the node
+                  subscribers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubscriberInfo'
+        '404':
+          description: Node not found
+
+  /topics/{topic_name}/messages:
+    get:
+      summary: Get messages from a topic
+      parameters:
+        - name: topic_name
+          in: path
+          required: true
+          description: Name of the ROS 2 topic
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of messages to return
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of messages from the topic
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topic_name:
+                    type: string
+                    description: Name of the topic
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MessageInfo'
+        '404':
+          description: Topic not found
+
+  /services/{service_name}/call:
+    post:
+      summary: Call a ROS 2 service
+      parameters:
+        - name: service_name
+          in: path
+          required: true
+          description: Name of the ROS 2 service
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+      responses:
+        '200':
+          description: Service response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '404':
+          description: Service not found
+        '500':
+          description: Service call failed
+
+components:
+  schemas:
+    PublisherInfo:
+      type: object
+      properties:
+        topic_name:
+          type: string
+          description: Name of the topic the publisher publishes to
+        message_type:
+          type: string
+          description: Type of message published
+        qos_profile:
+          type: object
+          description: QoS profile settings
+          properties:
+            reliability:
+              type: string
+              enum: [reliable, best_effort]
+            durability:
+              type: string
+              enum: [volatile, transient_local]
+
+    SubscriberInfo:
+      type: object
+      properties:
+        topic_name:
+          type: string
+          description: Name of the topic the subscriber subscribes to
+        message_type:
+          type: string
+          description: Type of message subscribed
+        qos_profile:
+          type: object
+          description: QoS profile settings
+          properties:
+            reliability:
+              type: string
+              enum: [reliable, best_effort]
+            durability:
+              type: string
+              enum: [volatile, transient_local]
+
+    MessageInfo:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when message was published
+        data:
+          type: object
+          description: Message content (structure varies by message type)
+        source_node:
+          type: string
+          description: Node that published the message
+
+    ServiceRequest:
+      type: object
+      description: Generic service request structure
+      properties:
+        request_data:
+          type: object
+          description: Request parameters
+
+    ServiceResponse:
+      type: object
+      description: Generic service response structure
+      properties:
+        success:
+          type: boolean
+          description: Whether the service call was successful
+        response_data:
+          type: object
+          description: Response data from the service
+        error_message:
+          type: string
+          description: Error message if the call failed
+
+tags:
+  - name: nodes
+    description: Operations related to ROS 2 nodes
+  - name: topics
+    description: Operations related to ROS 2 topics
+  - name: services
+    description: Operations related to ROS 2 services
+
+x-education-context:
+  module: "Module 1: The Robotic Nervous System (ROS 2)"
+  learning_goals:
+    - Understand ROS 2 node communication patterns
+    - Learn to work with publishers and subscribers
+    - Practice service-based communication
+  pedagogical_layer: "manual-foundation"
+  difficulty_level: "beginner"
