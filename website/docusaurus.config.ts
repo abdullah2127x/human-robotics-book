@@ -35,6 +35,10 @@ const config: Config = {
     locales: ['en'],
   },
 
+  // Additional SEO and meta tags
+  trailingSlash: false,
+  noIndex: false,
+
   presets: [
     [
       'classic',
@@ -46,21 +50,7 @@ const config: Config = {
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false, // Disable blog functionality for the book
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -74,22 +64,51 @@ const config: Config = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    metadata: [
+      {name: 'keywords', content: 'physical AI, humanoid robotics, artificial intelligence, robotics, machine learning, computer science, engineering, technology'},
+      {name: 'description', content: 'Learn about Physical AI and Humanoid Robotics - bridging digital minds to physical bodies through advanced robotics and AI technologies'},
+      {name: 'author', content: 'Physical AI & Humanoid Robotics Book'},
+      {name: 'og:title', content: 'Physical AI & Humanoid Robotics'},
+      {name: 'og:description', content: 'Bridging Digital Minds to Physical Bodies'},
+      {name: 'og:type', content: 'website'},
+      {name: 'og:url', content: 'https://abdullah2127x.github.io/human-robotics-book/'},
+    ],
+    // Performance and asset loading optimizations
+    scripts: [
+      {
+        src: 'https://polyfill.io/v3/polyfill.min.js?features=es6',
+        async: true,
+        defer: true,
+      },
+    ],
+    // Additional head tags for progressive enhancement
+    headTags: [
+      {
+        tagName: 'noscript',
+        innerHTML: '<style>.hero__title { font-size: 2rem; } .hero__subtitle { font-size: 1.2rem; } .button { display: inline-block; padding: 0.5rem 1rem; } .features { display: block; } .col { display: block; width: 100%; margin-bottom: 2rem; }</style>',
+      },
+    ],
     navbar: {
-      title: 'My Site',
+      title: 'Physical AI & Humanoid Robotics',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Physical AI & Humanoid Robotics Logo',
         src: 'img/logo.svg',
+        srcDark: 'img/logo_dark.svg',
       },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Modules',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          to: '/docs/intro',
+          label: 'Start Reading',
+          position: 'left',
+        },
+        {
+          href: 'https://github.com/abdullah2127x/human-robotics-book',
           label: 'GitHub',
           position: 'right',
         },
@@ -102,7 +121,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'All Modules',
               to: '/docs/intro',
             },
           ],
@@ -111,34 +130,30 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'GitHub',
+              href: 'https://github.com/abdullah2127x/human-robotics-book',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              href: 'https://discord.gg/robotics',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Resources',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'GitHub',
+              href: 'https://github.com/abdullah2127x/human-robotics-book',
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Discord',
+              href: 'https://discord.gg/robotics',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Physical AI & Humanoid Robotics Book. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -16,7 +16,12 @@
       "Bash(echo \"@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\")",
       "Bash(npm install @tailwindcss/postcss)",
       "Bash(echo \"module.exports = {\n  plugins: {\n    ''@tailwindcss/postcss'': {},\n    autoprefixer: {},\n  },\n}\n\")",
-      "Bash(mkdir -p \"D:/AbdullahQureshi/workspace/Hackathon-2025/human-robotics-book/specs/002-ui-identity-setup/contracts\")"
+      "Bash(mkdir -p \"D:/AbdullahQureshi/workspace/Hackathon-2025/human-robotics-book/specs/002-ui-identity-setup/contracts\")",
+      "Bash(cat .gitignore)",
+      "Bash(cat website/.gitignore)",
+      "Bash(cat website/src/pages/index.tsx)",
+      "Bash(cat website/docusaurus.config.ts)",
+      "Bash(cat website/src/css/custom.css)"
     ],
     "deny": [],
     "ask": []
