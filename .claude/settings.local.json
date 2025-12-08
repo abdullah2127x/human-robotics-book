@@ -10,7 +10,12 @@
       "Bash(mkdir -p specs/001-book-infra)",
       "Bash(.specify/scripts/bash/check-prerequisites.sh --json --paths-only)",
       "mcp__context7__get-library-docs",
-      "Bash(.specify/scripts/bash/check-prerequisites.sh --json)"
+      "Bash(.specify/scripts/bash/check-prerequisites.sh --json)",
+      "Bash(npx tailwindcss init -p)",
+      "Bash(echo \"module.exports = {\n  plugins: {\n    tailwindcss: {},\n    autoprefixer: {},\n  },\n}\n\")",
+      "Bash(echo \"@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\")",
+      "Bash(npm install @tailwindcss/postcss)",
+      "Bash(echo \"module.exports = {\n  plugins: {\n    ''@tailwindcss/postcss'': {},\n    autoprefixer: {},\n  },\n}\n\")"
     ],
     "deny": [],
     "ask": []

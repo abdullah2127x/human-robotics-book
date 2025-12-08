@@ -1,0 +1,1 @@
+---\ntitle: Digital Twin\ndescription: Understanding Digital Twins in Robotics\n---\n\n# Digital Twin\n\nThis module covers the concept of digital twins and their application in robotics.
