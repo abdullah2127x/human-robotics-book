@@ -211,3 +211,7 @@ See `.specify/memory/constitution.md` for code quality, testing, performance, se
 
 ## Recent Changes
 - 001-book-infra: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+
+## Active Technologies
+- Python 3.10+ for ROS 2 integration, XML for URDF/SDF robot descriptions, JavaScript/TypeScript for Docusaurus website + ROS 2 Humble/Harmonic, Gazebo Garden, Unity Robotics Simulation packages, Docusaurus 3.x, rclpy library (001-digital-twin-gazebo-unity)
+- N/A (educational content stored as markdown/MDX files) (001-digital-twin-gazebo-unity)

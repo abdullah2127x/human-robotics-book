@@ -57,8 +57,37 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Module 2: Digital Twins',
-      items: ['module2/digital-twin'],
+      label: 'Module 2: The Digital Twin (Gazebo & Unity)',
+      items: [
+        'module2/index',
+        {
+          type: 'category',
+          label: 'Kinematics',
+          items: [
+            'module2/kinematics/index',
+            'module2/kinematics/urdf-intro',
+            'module2/kinematics/joint-limits'
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Physics Simulation',
+          items: [
+            'module2/physics/index',
+            'module2/physics/gazebo-setup',
+            'module2/physics/collisions-gravity'
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Perception',
+          items: [
+            'module2/perception/index',
+            'module2/perception/sensor-model',
+            'module2/perception/unity-viz'
+          ],
+        },
+      ],
     },
     {
       type: 'category',
