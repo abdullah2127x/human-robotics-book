@@ -1,0 +1,177 @@
+---
+sidebar_label: Parameters
+title: ROS 2 Parameters
+---
+
+# ROS 2 Parameters
+
+This content file explains the parameters system in ROS 2, which allows nodes to be configured with values that can be changed without recompiling the code.
+
+## Learning Objectives
+
+By the end of this content, you will:
+
+- Understand how ROS 2 parameters work
+- Create nodes that use parameters for configuration
+- Set parameters at runtime and from launch files
+- Appreciate the importance of configurable nodes in robotics
+
+## Parameters in ROS 2
+
+Parameters are named values (like integers, floats, booleans, strings, or lists) that can be set on a node to configure its behavior. Unlike topics and services, parameters are stored in the node itself and persist for the lifetime of the node.
+
+## Creating a Parameter-Based Node
+
+Here's an example of a node that uses parameters for configuration:
+
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.parameter import Parameter
+from std_msgs.msg import String
+
+class ParameterNode(Node):
+    def __init__(self):
+        super().__init__('parameter_node')
+
+        # Declare parameters with default values
+        self.declare_parameter('message_frequency', 1.0)
+        self.declare_parameter('output_topic', 'output')
+        self.declare_parameter('prefix_text', 'Parameter Message:')
+
+        # Get parameter values
+        self.frequency = self.get_parameter('message_frequency').value
+        self.topic_name = self.get_parameter('output_topic').value
+        self.prefix = self.get_parameter('prefix_text').value
+
+        # Create publisher
+        self.publisher = self.create_publisher(String, self.topic_name, 10)
+
+        # Create timer based on frequency parameter
+        self.timer = self.create_timer(1.0 / self.frequency, self.timer_callback)
+
+        self.counter = 0
+        self.get_logger().info(f'Parameter node initialized with frequency: {self.frequency}, topic: {self.topic_name}')
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'{self.prefix} {self.counter}'
+        self.publisher.publish(msg)
+        self.get_logger().info(f'Published: "{msg.data}"')
+        self.counter += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = ParameterNode()
+
+    # Example of setting a parameter programmatically
+    node.set_parameters([Parameter('message_frequency', Parameter.Type.DOUBLE, 2.0)])
+
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Setting Parameters at Runtime
+
+Parameters can be set when the node is running using the `ros2 param` command:
+
+```bash
+# Set a parameter on a running node
+ros2 param set /parameter_node message_frequency 2.0
+
+# Get a parameter value
+ros2 param get /parameter_node message_frequency
+
+# List all parameters for a node
+ros2 param list /parameter_node
+```
+
+## Using Parameter Descriptors
+
+You can also declare parameters with descriptors to specify constraints:
+
+```python
+from rcl_interfaces.msg import ParameterDescriptor
+from rcl_interfaces.msg import IntegerRange
+
+class ConstrainedParameterNode(Node):
+    def __init__(self):
+        super().__init__('constrained_parameter_node')
+
+        # Declare parameter with descriptor
+        descriptor = ParameterDescriptor(
+            description='Frequency for message publication',
+            integer_range=[IntegerRange(from_value=0, to_value=100, step=1)]
+        )
+
+        self.declare_parameter('frequency', 1, descriptor)
+```
+
+## Parameters in Launch Files
+
+Parameters can be set in launch files, which is often the preferred way to configure nodes:
+
+```python
+# Python launch file example
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='my_package',
+            executable='parameter_node',
+            name='parameter_node',
+            parameters=[
+                {'message_frequency': 2.0},
+                {'output_topic': 'custom_output'},
+                {'prefix_text': 'Custom Prefix:'},
+            ]
+        )
+    ])
+```
+
+## YAML Parameter Files
+
+You can also define parameters in YAML files:
+
+```yaml
+parameter_node:
+  ros__parameters:
+    message_frequency: 2.0
+    output_topic: "custom_output"
+    prefix_text: "Custom Prefix:"
+```
+
+And load them in launch files:
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    return LaunchDescription([
+        Node(
+            package='my_package',
+            executable='parameter_node',
+            name='parameter_node',
+            parameters=['path/to/params.yaml']
+        )
+    ])
+```
+
+## Best Practices for Parameters
+
+1. **Use appropriate types**: Choose the right parameter type (int, float, string, bool, list) for your needs
+2. **Provide sensible defaults**: Always provide default values that make the node functional
+3. **Validate values**: Check parameter values at startup and during runtime if they can change
+4. **Document parameters**: Clearly document what each parameter does and valid ranges
+5. **Group related parameters**: Organize parameters logically in your code
+
+## Summary
+
+Parameters are a powerful way to make your ROS 2 nodes configurable without requiring code changes. They're essential for deploying the same node in different environments with different configurations. Understanding parameters is important for creating flexible and maintainable ROS 2 systems.
