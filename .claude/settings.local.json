@@ -22,7 +22,10 @@
       "Bash(cat website/src/pages/index.tsx)",
       "Bash(cat website/docusaurus.config.ts)",
       "Bash(cat website/src/css/custom.css)",
-      "Bash(dir \"D:\\AbdullahQureshi\\workspace\\Hackathon-2025\\human-robotics-book\\specs\\001-ros2-module1\\checklists\")"
+      "Bash(dir \"D:\\AbdullahQureshi\\workspace\\Hackathon-2025\\human-robotics-book\\specs\\001-ros2-module1\\checklists\")",
+      "Bash(dir \"D:\\AbdullahQureshi\\workspace\\Hackathon-2025\\human-robotics-book\\specs\\001-digital-twin-gazebo-unity\\checklists\")",
+      "Bash(dir \"D:\\AbdullahQureshi\\workspace\\Hackathon-2025\\human-robotics-book\\specs\\001-digital-twin-gazebo-unity\\contracts\")",
+      "Bash(git rev-parse --abbrev-ref HEAD)"
     ],
     "deny": [],
     "ask": []

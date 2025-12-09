@@ -1,0 +1,125 @@
+# Simulated Sensor Configuration Skill Contract
+# Defines the reusable skill for configuring virtual sensors in simulation environments
+
+openapi: 3.0.0
+info:
+  title: Simulated Sensor Configuration Skill
+  description: A reusable skill that configures virtual sensors to publish data to ROS 2 topics with realistic parameters
+  version: 1.0.0
+  x-skill-type: reusable-component
+  x-intelligence-focus: sensor-configuration
+
+paths: {}
+
+components:
+  schemas:
+    SensorConfiguration:
+      type: object
+      required:
+        - sensor_type
+        - topic_name
+        - update_rate
+        - noise_parameters
+      properties:
+        sensor_type:
+          type: string
+          enum: [lidar, depth_camera, imu, camera, gps]
+          description: Type of sensor to configure
+        topic_name:
+          type: string
+          pattern: "^/[a-zA-Z][a-zA-Z0-9_/]*$"
+          description: ROS 2 topic name for sensor data publication
+        update_rate:
+          type: number
+          minimum: 0.1
+          maximum: 100.0
+          description: Frequency of data publication in Hz
+        noise_parameters:
+          $ref: "#/components/schemas/NoiseParameters"
+        mounting_frame:
+          type: string
+          default: "base_link"
+          description: Robot frame to which the sensor is attached
+        sensor_properties:
+          $ref: "#/components/schemas/SensorProperties"
+
+    NoiseParameters:
+      type: object
+      properties:
+        standard_deviation:
+          type: number
+          minimum: 0.0
+          description: Standard deviation for Gaussian noise model
+        bias:
+          type: number
+          description: Bias offset for sensor readings
+        drift_rate:
+          type: number
+          description: Rate of parameter drift over time
+
+    SensorProperties:
+      type: object
+      properties:
+        # LiDAR-specific properties
+        range_min:
+          type: number
+          description: Minimum detection range (meters)
+        range_max:
+          type: number
+          description: Maximum detection range (meters)
+        field_of_view:
+          type: number
+          description: Field of view in radians
+        resolution:
+          type: number
+          description: Angular resolution in radians
+        # Camera-specific properties
+        image_width:
+          type: integer
+          description: Image width in pixels
+        image_height:
+          type: integer
+          description: Image height in pixels
+        fov_horizontal:
+          type: number
+          description: Horizontal field of view in radians
+        # IMU-specific properties
+        acceleration_range:
+          type: number
+          description: Acceleration measurement range (m/s²)
+        angular_velocity_range:
+          type: number
+          description: Angular velocity measurement range (rad/s)
+
+    URDFInjection:
+      type: object
+      required:
+        - urdf_snippet
+        - sensor_config
+      properties:
+        urdf_snippet:
+          type: string
+          description: Complete URDF XML snippet for sensor configuration
+        sensor_config:
+          $ref: "#/components/schemas/SensorConfiguration"
+        robot_link:
+          type: string
+          default: "base_link"
+          description: Link to which sensor should be attached
+
+  examples:
+    lidar_sensor_example:
+      summary: LiDAR sensor configuration example
+      value:
+        sensor_type: lidar
+        topic_name: "/sensor/laser_scan"
+        update_rate: 10.0
+        mounting_frame: "base_link"
+        noise_parameters:
+          standard_deviation: 0.01
+          bias: 0.001
+        sensor_properties:
+          range_min: 0.1
+          range_max: 30.0
+          field_of_view: 3.14159
+          resolution: 0.01745
