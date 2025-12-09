@@ -1,1 +1,0 @@
----\ntitle: ROS Introduction\ndescription: Introduction to Robot Operating System\n---\n\n# ROS Introduction\n\nThis module covers the basics of Robot Operating System (ROS) and its application in humanoid robotics.

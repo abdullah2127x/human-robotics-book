@@ -21,7 +21,8 @@
       "Bash(cat website/.gitignore)",
       "Bash(cat website/src/pages/index.tsx)",
       "Bash(cat website/docusaurus.config.ts)",
-      "Bash(cat website/src/css/custom.css)"
+      "Bash(cat website/src/css/custom.css)",
+      "Bash(dir \"D:\\AbdullahQureshi\\workspace\\Hackathon-2025\\human-robotics-book\\specs\\001-ros2-module1\\checklists\")"
     ],
     "deny": [],
     "ask": []

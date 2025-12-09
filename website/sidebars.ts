@@ -22,8 +22,38 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Module 1: ROS Introduction',
-      items: ['module1/ros-intro'],
+      label: 'Module 1: The Robotic Nervous System (ROS 2)',
+      items: [
+        'module1/index',
+        {
+          type: 'category',
+          label: 'Core Concepts',
+          items: [
+            'module1/core-concepts/index',
+            'module1/core-concepts/pub-sub',
+            'module1/core-concepts/parameters'
+          ],
+        },
+        {
+          type: 'category',
+          label: 'AI Collaboration',
+          items: [
+            'module1/agent-bridge/index',
+            'module1/agent-bridge/rclpy-intro',
+            'module1/agent-bridge/launch-files'
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Component Design',
+          items: [
+            'module1/design/index',
+            'module1/design/node-template',
+            'module1/design/mini-controller-spec',
+            'module1/design/mini-controller-impl'
+          ],
+        },
+      ],
     },
     {
       type: 'category',

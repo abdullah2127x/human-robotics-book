@@ -1,0 +1,352 @@
+---
+sidebar_label: Launch Files
+title: Launch Files & Debugging Strategies
+---
+
+# Launch Files & Debugging Strategies
+
+This content file covers the principles of YAML/Python Launch File Syntax, strategies for debugging large ROS 2 graphs, and techniques for using the Three Roles Framework (Validator, Editor, Prompt Engineer) to correct AI-generated code.
+
+## Learning Objectives
+
+By the end of this content, you will:
+
+- Understand both YAML and Python launch file syntax
+- Create complex launch files that coordinate multiple nodes
+- Apply debugging strategies for large ROS 2 graphs
+- Use the Three Roles Framework to correct AI-generated code
+- Appreciate the importance of launch files in ROS 2 system orchestration
+
+## Launch Files Overview
+
+Launch files allow you to start multiple nodes at once with a single command, making it easier to manage complex ROS 2 systems. They are essential for deploying complete systems with all required nodes running simultaneously.
+
+## Python Launch Files
+
+Python launch files offer the full power of Python for complex launch configurations:
+
+```python
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    # Declare launch arguments
+    namespace_launch_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+        description='Namespace for all nodes'
+    )
+
+    return LaunchDescription([
+        # Include the namespace declaration
+        namespace_launch_arg,
+
+        # Define nodes
+        Node(
+            package='demo_nodes_cpp',
+            executable='talker',
+            name='talker',
+            namespace=LaunchConfiguration('namespace'),
+            parameters=[
+                {'param_a': 'value_a'},
+                {'param_b': 'value_b'}
+            ],
+            remappings=[
+                ('chatter', 'my_chatter')
+            ]
+        ),
+
+        Node(
+            package='demo_nodes_py',
+            executable='listener',
+            name='listener',
+            namespace=LaunchConfiguration('namespace'),
+            parameters=[
+                {'param_c': 'value_c'}
+            ]
+        ),
+
+        # Timer node that runs for a specific duration
+        Node(
+            package='demo_nodes_cpp',
+            executable='parameter_blackboard',
+            name='timer_node',
+            namespace=LaunchConfiguration('namespace')
+        )
+    ])
+```
+
+## YAML Launch Files
+
+YAML launch files provide a more declarative approach:
+
+```yaml
+launch:
+
+  # Arguments
+  - arg:
+      name: namespace
+      default: ''
+
+  # Nodes
+  - node:
+      pkg: demo_nodes_cpp
+      exec: talker
+      name: talker
+      namespace: $(var namespace)
+      params:
+        - param_a: value_a
+        - param_b: value_b
+      remap:
+        - from: chatter
+          to: my_chatter
+
+  - node:
+      pkg: demo_nodes_py
+      exec: listener
+      name: listener
+      namespace: $(var namespace)
+      params:
+        - param_c: value_c
+
+  - node:
+      pkg: demo_nodes_cpp
+      exec: parameter_blackboard
+      name: timer_node
+      namespace: $(var namespace)
+```
+
+## Complex Launch File Example
+
+Here's a more complex launch file that orchestrates three different nodes with parameters and remappings:
+
+```python
+from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument, LogInfo, TimerAction
+from launch.conditions import IfCondition
+from launch.launch_description_entity import LaunchDescriptionEntity
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+import os
+
+def generate_launch_description():
+    # Declare launch arguments
+    debug_launch_arg = DeclareLaunchArgument(
+        'debug',
+        default_value='false',
+        description='Enable debug mode'
+    )
+
+    log_level_launch_arg = DeclareLaunchArgument(
+        'log_level',
+        default_value='info',
+        description='Log level for nodes'
+    )
+
+    # Define nodes
+    camera_driver_node = Node(
+        package='camera_driver_pkg',
+        executable='camera_driver_node',
+        name='camera_driver',
+        parameters=[
+            os.path.join(get_package_share_directory('camera_driver_pkg'), 'config', 'camera_params.yaml'),
+            {'image_width': 640},
+            {'image_height': 480},
+            {'frame_rate': 30.0}
+        ],
+        condition=IfCondition(PythonExpression(['"', LaunchConfiguration('debug'), '" != "true"']))
+    )
+
+    lidar_driver_node = Node(
+        package='lidar_driver_pkg',
+        executable='lidar_driver_node',
+        name='lidar_driver',
+        parameters=[
+            {'range_min': 0.1},
+            {'range_max': 30.0},
+            {'scan_resolution': 0.25}
+        ]
+    )
+
+    perception_node = Node(
+        package='perception_pkg',
+        executable='perception_node',
+        name='perception',
+        parameters=[
+            {'use_camera': True},
+            {'use_lidar': True},
+            {'fusion_algorithm': 'ekf'}
+        ],
+        remappings=[
+            ('input/camera', 'camera_driver/image_raw'),
+            ('input/lidar', 'lidar_driver/scan')
+        ]
+    )
+
+    # Conditional debug node
+    debug_visualizer_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='debug_visualizer',
+        arguments=['-d', os.path.join(get_package_share_directory('perception_pkg'), 'rviz', 'debug.rviz')],
+        condition=IfCondition(LaunchConfiguration('debug'))
+    )
+
+    # Log information
+    startup_log = LogInfo(msg='Starting perception system launch...')
+
+    return LaunchDescription([
+        debug_launch_arg,
+        log_level_launch_arg,
+        startup_log,
+        camera_driver_node,
+        lidar_driver_node,
+        perception_node,
+        debug_visualizer_node
+    ])
+```
+
+## Debugging Large ROS 2 Graphs
+
+Debugging complex ROS 2 systems with many nodes requires systematic approaches:
+
+### 1. Use ROS 2 Command Line Tools
+
+```bash
+# List all nodes
+ros2 node list
+
+# Get information about a specific node
+ros2 node info /node_name
+
+# List all topics
+ros2 topic list
+
+# Echo a topic to see messages
+ros2 topic echo /topic_name std_msgs/msg/String
+
+# Get information about a topic
+ros2 topic info /topic_name
+
+# List all services
+ros2 service list
+
+# Call a service
+ros2 service call /service_name service_type "{request_field: value}"
+```
+
+### 2. Visualize the System
+
+```bash
+# Install and run rqt_graph to visualize the system
+sudo apt install ros-humble-rqt-graph
+rqt_graph
+
+# Use ros2 doctor to diagnose system issues
+ros2 doctor
+```
+
+### 3. Check Logs and Parameters
+
+```bash
+# Get logs from a specific node
+ros2 launch-logs /path/to/log/directory
+
+# List parameters for a node
+ros2 param list /node_name
+
+# Get a specific parameter
+ros2 param get /node_name param_name
+
+# Set a parameter
+ros2 param set /node_name param_name value
+```
+
+## The Three Roles Framework for AI Collaboration
+
+When using AI assistants to generate launch files or other complex code, apply the Three Roles Framework:
+
+### 1. Validator Role
+Ask the AI to review and validate your code for correctness:
+
+"Please review this launch file and identify any potential issues with node names, package names, executable names, or parameter configurations."
+
+### 2. Editor Role
+Ask the AI to modify existing code to meet specific requirements:
+
+"I need to add a new node to this launch file that processes sensor data. The package is 'sensor_processing_pkg', executable is 'processor_node', and it needs parameters for processing frequency and output topic."
+
+### 3. Prompt Engineer Role
+Collaborate with AI to refine prompts for better results:
+
+"Help me create a better prompt to generate launch files that include error handling, parameter validation, and conditional node execution."
+
+## Example: AI Collaboration for Launch File Creation
+
+Here's an example of how to collaborate with an AI assistant to create a launch file:
+
+1. **Initial Prompt**: "Create a Python launch file that starts a publisher, subscriber, and a service server with proper error handling and logging."
+
+2. **Validator Review**: "Review this launch file and check if the node names are unique and the package/executable names are correct."
+
+3. **Editor Modification**: "Modify this launch file to add parameters for each node and remappings for the topics."
+
+4. **Iterative Refinement**: Continue refining based on testing results and additional requirements.
+
+## Common Launch File Patterns
+
+### 1. Conditional Node Execution
+```python
+from launch.conditions import IfCondition, UnlessCondition
+
+# Only run node if debug is true
+Node(
+    package='rviz2',
+    executable='rviz2',
+    condition=IfCondition(LaunchConfiguration('debug'))
+)
+```
+
+### 2. Grouping Nodes
+```python
+from launch.actions import GroupAction
+from launch_ros.actions import PushRosNamespace
+
+# Group nodes with a common namespace
+group_action = GroupAction(
+    actions=[
+        PushRosNamespace(LaunchConfiguration('namespace')),
+        Node(package='pkg1', executable='node1'),
+        Node(package='pkg2', executable='node2'),
+    ]
+)
+```
+
+### 3. Including Other Launch Files
+```python
+from launch.actions import IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+IncludeLaunchDescription(
+    PythonLaunchDescriptionSource([
+        get_package_share_directory('other_pkg'),
+        '/launch/other_launch.py'
+    ])
+)
+```
+
+## Best Practices for Launch Files
+
+1. **Use Launch Arguments**: Make your launch files configurable with launch arguments
+2. **Parameter Files**: Use YAML parameter files for complex configurations
+3. **Conditional Execution**: Use conditions to selectively run nodes
+4. **Proper Namespacing**: Organize nodes with appropriate namespaces
+5. **Error Handling**: Include error handling and logging
+6. **Documentation**: Comment complex launch files to explain the system architecture
+
+## Summary
+
+Launch files are essential for orchestrating complex ROS 2 systems. Understanding both Python and YAML syntax gives you flexibility in creating launch configurations. The Three Roles Framework is valuable when collaborating with AI assistants to create and debug launch files. Effective debugging strategies help manage complex systems with many interconnected nodes.

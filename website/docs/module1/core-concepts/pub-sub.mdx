@@ -1,0 +1,167 @@
+---
+sidebar_label: Publisher/Subscriber Patterns
+title: Publisher/Subscriber Patterns in ROS 2
+---
+
+# Publisher/Subscriber Patterns in ROS 2
+
+This content file explains the fundamental Publisher/Subscriber communication pattern in ROS 2. This is the basis for asynchronous communication between nodes in ROS 2 systems.
+
+## Learning Objectives
+
+By the end of this content, you will:
+
+- Understand the Publisher/Subscriber communication model in ROS 2
+- Create a simple Publisher node in Python using rclpy
+- Create a simple Subscriber node in Python using rclpy
+- Test communication between nodes using topic echoing
+
+## Publisher/Subscriber Model
+
+The Publisher/Subscriber (Pub/Sub) model is the most common communication pattern in ROS 2. It enables asynchronous communication where:
+
+- **Publishers** send messages to topics without knowing who receives them
+- **Subscribers** receive messages from topics without knowing who sends them
+- Communication is decoupled in time and space
+
+## Creating a Publisher Node
+
+Let's create a simple publisher node that sends messages to a topic:
+
+```python
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalPublisher(Node):
+    def __init__(self):
+        super().__init__('minimal_publisher')
+        self.publisher_ = self.create_publisher(String, 'topic', 10)
+        timer_period = 0.5  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.i = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'Hello World: {self.i}'
+        self.publisher_.publish(msg)
+        self.get_logger().info(f'Publishing: "{msg.data}"')
+        self.i += 1
+
+def main(args=None):
+    rclpy.init(args=args)
+    minimal_publisher = MinimalPublisher()
+    rclpy.spin(minimal_publisher)
+    minimal_publisher.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Creating a Subscriber Node
+
+Now let's create a subscriber node that receives messages from the topic:
+
+```python
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class MinimalSubscriber(Node):
+    def __init__(self):
+        super().__init__('minimal_subscriber')
+        self.subscription = self.create_subscription(
+            String,
+            'topic',
+            self.listener_callback,
+            10)
+        self.subscription  # prevent unused variable warning
+
+    def listener_callback(self, msg):
+        self.get_logger().info(f'I heard: "{msg.data}"')
+
+def main(args=None):
+    rclpy.init(args=args)
+    minimal_subscriber = MinimalSubscriber()
+    rclpy.spin(minimal_subscriber)
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Package Creation
+
+To run these nodes, you need to create a proper ROS 2 package. Here's the basic structure:
+
+1. Create the package directory structure:
+```bash
+mkdir -p ros2_module1_examples/ros2_module1_examples
+```
+
+2. Create the setup.py file:
+```python
+from setuptools import setup
+
+package_name = 'ros2_module1_examples'
+
+setup(
+    name=package_name,
+    version='0.0.0',
+    packages=[package_name],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+    ],
+    install_requires=['setuptools'],
+    zip_safe=True,
+    maintainer='Your Name',
+    maintainer_email='your.email@example.com',
+    description='Examples for Module 1: The Robotic Nervous System',
+    license='Apache License 2.0',
+    tests_require=['pytest'],
+    entry_points={
+        'console_scripts': [
+            'talker = ros2_module1_examples.publisher_member_function:main',
+            'listener = ros2_module1_examples.subscriber_member_function:main',
+        ],
+    },
+)
+```
+
+## Verification
+
+To verify the Publisher and Subscriber are working:
+
+1. Source your ROS 2 environment:
+```bash
+source /opt/ros/humble/setup.bash  # or iron
+```
+
+2. Build your package:
+```bash
+colcon build --packages-select ros2_module1_examples
+source install/setup.bash
+```
+
+3. Run the publisher in one terminal:
+```bash
+ros2 run ros2_module1_examples talker
+```
+
+4. Run the subscriber in another terminal:
+```bash
+ros2 run ros2_module1_examples listener
+```
+
+5. Verify communication by echoing the topic in a third terminal:
+```bash
+ros2 topic echo /topic std_msgs/msg/String
+```
+
+## Summary
+
+The Publisher/Subscriber pattern is fundamental to ROS 2 communication. Understanding this pattern is crucial for building more complex ROS 2 systems. In the next content, we'll explore parameters and how they can be used to configure nodes.

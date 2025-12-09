@@ -1,0 +1,213 @@
+---
+sidebar_label: rclpy Library Introduction
+title: Introduction to the rclpy Library
+---
+
+# Introduction to the rclpy Library
+
+This content file provides an introduction to rclpy, the Python client library for ROS 2. rclpy allows you to create ROS 2 nodes, publish and subscribe to topics, make service calls, and much more from Python programs.
+
+## Learning Objectives
+
+By the end of this content, you will:
+
+- Understand what rclpy is and its role in ROS 2
+- Know how to import and initialize rclpy in Python programs
+- Create ROS 2 nodes using rclpy
+- Understand the basic patterns for publishers, subscribers, services, and clients
+- Appreciate the differences between rclpy and other ROS 2 client libraries
+
+## What is rclpy?
+
+rclpy is the Python client library for ROS 2. It provides a Python API that allows you to interact with the ROS 2 middleware (called rmw - ROS Middleware). With rclpy, you can create ROS 2 nodes, publish and subscribe to topics, provide and call services, and use actions, all from Python programs.
+
+## Installing and Importing rclpy
+
+rclpy comes with the standard ROS 2 installation. To use it in your Python programs, you simply import it:
+
+```python
+import rclpy
+from rclpy.node import Node
+```
+
+## Basic rclpy Program Structure
+
+Here's the basic structure of a typical rclpy program:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+def main(args=None):
+    # Initialize the ROS 2 Python client library
+    rclpy.init(args=args)
+
+    # Create an instance of your custom node
+    node = MyCustomNode()
+
+    # Keep the node alive and processing callbacks
+    rclpy.spin(node)
+
+    # Clean up and shut down
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Creating a Custom Node Class
+
+Most rclpy programs extend the `Node` class to create custom functionality:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+class MyCustomNode(Node):
+    def __init__(self):
+        # Initialize the parent Node class with a name
+        super().__init__('my_custom_node')
+
+        # Node-specific initialization code goes here
+        self.get_logger().info('MyCustomNode initialized')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MyCustomNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+## Publishers and Subscribers with rclpy
+
+Creating publishers and subscribers in rclpy follows a standard pattern:
+
+```python
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import String
+
+class TalkerNode(Node):
+    def __init__(self):
+        super().__init__('talker')
+
+        # Create a publisher
+        self.publisher = self.create_publisher(String, 'topic', 10)
+
+        # Create a timer to periodically publish messages
+        timer_period = 0.5  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+
+        self.i = 0
+
+    def timer_callback(self):
+        msg = String()
+        msg.data = f'Hello World: {self.i}'
+        self.publisher.publish(msg)
+        self.get_logger().info(f'Publishing: "{msg.data}"')
+        self.i += 1
+
+class ListenerNode(Node):
+    def __init__(self):
+        super().__init__('listener')
+
+        # Create a subscriber
+        self.subscription = self.create_subscription(
+            String,
+            'topic',
+            self.listener_callback,
+            10)  # QoS depth
+        self.subscription  # prevent unused variable warning
+
+    def listener_callback(self, msg):
+        self.get_logger().info(f'I heard: "{msg.data}"')
+```
+
+## Services and Clients
+
+rclpy also supports services and clients:
+
+```python
+import rclpy
+from rclpy.node import Node
+from example_interfaces.srv import AddTwoInts
+
+class ServiceNode(Node):
+    def __init__(self):
+        super().__init__('service_server')
+
+        # Create a service server
+        self.service = self.create_service(
+            AddTwoInts,
+            'add_two_ints',
+            self.add_two_ints_callback)
+
+    def add_two_ints_callback(self, request, response):
+        response.sum = request.a + request.b
+        self.get_logger().info(f'Returning: {response.sum}')
+        return response
+
+class ClientNode(Node):
+    def __init__(self):
+        super().__init__('service_client')
+
+        # Create a client
+        self.client = self.create_client(AddTwoInts, 'add_two_ints')
+
+        # Wait for service to be available
+        while not self.client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+
+        self.req = AddTwoInts.Request()
+
+    def send_request(self, a, b):
+        self.req.a = a
+        self.req.b = b
+        return self.client.call_async(self.req)
+```
+
+## Actions
+
+Actions in rclpy provide a more sophisticated way to handle long-running tasks:
+
+```python
+import rclpy
+from rclpy.action import ActionClient
+from rclpy.node import Node
+from example_interfaces.action import Fibonacci
+
+class FibonacciActionClient(Node):
+    def __init__(self):
+        super().__init__('fibonacci_action_client')
+        self._action_client = ActionClient(
+            self,
+            Fibonacci,
+            'fibonacci')
+
+    def send_goal(self, order):
+        goal_msg = Fibonacci.Goal()
+        goal_msg.order = order
+
+        self._action_client.wait_for_server()
+
+        # Send the goal and get a future
+        return self._action_client.send_goal_async(goal_msg)
+```
+
+## Best Practices with rclpy
+
+1. **Always call init and shutdown**: Use rclpy.init() and rclpy.shutdown() to properly manage the client library lifecycle
+2. **Use context managers**: Consider using context managers for automatic cleanup
+3. **Handle exceptions**: Properly handle potential exceptions in callbacks
+4. **Use appropriate QoS settings**: Choose Quality of Service settings appropriate for your application
+5. **Log appropriately**: Use the built-in logger for debugging and monitoring
+6. **Clean up resources**: Always destroy nodes when done
+
+## Summary
+
+rclpy is the primary way to create ROS 2 applications in Python. Understanding its basic patterns for nodes, publishers, subscribers, services, and clients is essential for developing ROS 2 systems. The library provides a Pythonic interface to all of ROS 2's core functionality, making it accessible for developers familiar with Python.

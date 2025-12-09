@@ -1,0 +1,481 @@
+---
+sidebar_label: Sensor Node Template
+title: ROS 2 Sensor Node Template
+---
+
+# ROS 2 Sensor Node Template
+
+This content file provides the complete Python class structure for the ROS 2 Sensor Node Template, including placeholder methods for initialization, data acquisition, and message publishing, ensuring the code is well-commented for future re-use as a customizable **Skill/Subagent**.
+
+## Learning Objectives
+
+By the end of this content, you will:
+
+- Understand the structure of a reusable ROS 2 Sensor Node Template
+- Create complete Python class structures with proper initialization
+- Implement data acquisition methods with placeholder implementations
+- Create message publishing methods with proper error handling
+- Appreciate how templates enable rapid development of similar nodes
+- Understand how to customize the template for different sensor types
+
+## Complete ROS 2 Sensor Node Template
+
+The following is a complete, reusable template for creating ROS 2 sensor nodes:
+
+```python
+import rclpy
+from rclpy.node import Node
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+from sensor_msgs.msg import LaserScan, Imu, MagneticField, NavSatFix
+from std_msgs.msg import Float32, String
+from geometry_msgs.msg import PointStamped
+import time
+import threading
+from typing import Optional, Any, Callable
+
+
+class ROSSensorNodeTemplate(Node):
+    """
+    Reusable ROS 2 Sensor Node Template
+
+    This template provides a foundation for creating sensor nodes that can be
+    customized for different sensor types. The template includes placeholder
+    methods for initialization, data acquisition, and message publishing that
+    can be overridden in subclasses to create specific sensor implementations.
+
+    The template follows ROS 2 best practices including:
+    - Proper QoS profiles for different use cases
+    - Error handling and logging
+    - Parameter configuration
+    - Lifecycle management
+    - Thread-safe data access
+    """
+
+    def __init__(self, node_name: str = 'sensor_node', sensor_type: str = 'generic'):
+        """
+        Initialize the ROS 2 Sensor Node Template
+
+        Args:
+            node_name: Name for this ROS node
+            sensor_type: Type of sensor (used for configuration and logging)
+        """
+        super().__init__(node_name)
+
+        # Store sensor type for configuration purposes
+        self.sensor_type = sensor_type
+
+        # Configuration parameters with defaults
+        self.declare_parameter('publish_rate', 10.0)  # Hz
+        self.declare_parameter('sensor_frame_id', f'{sensor_type}_frame')
+        self.declare_parameter('enable_debug', False)
+        self.declare_parameter('timeout_duration', 5.0)  # seconds
+
+        # Get parameter values
+        self.publish_rate = self.get_parameter('publish_rate').value
+        self.frame_id = self.get_parameter('sensor_frame_id').value
+        self.enable_debug = self.get_parameter('enable_debug').value
+        self.timeout_duration = self.get_parameter('timeout_duration').value
+
+        # Initialize sensor-specific parameters
+        self.initialize_sensor_parameters()
+
+        # Create publisher for sensor data
+        self.sensor_publisher = self.create_publisher(
+            self.get_sensor_message_type(),  # Override this method to return appropriate message type
+            f'{sensor_type}_data',
+            self.get_qos_profile()
+        )
+
+        # Create optional diagnostic publisher
+        self.diagnostic_publisher = self.create_publisher(
+            String,
+            f'{sensor_type}_diagnostics',
+            10
+        )
+
+        # Timer for periodic sensor reading
+        self.timer = self.create_timer(
+            1.0 / self.publish_rate,  # Convert rate to period
+            self.acquire_and_publish_data
+        )
+
+        # Storage for sensor data (thread-safe)
+        self._data_lock = threading.RLock()
+        self._last_sensor_data = None
+        self._last_timestamp = None
+
+        # Statistics
+        self._data_count = 0
+
+        # Log initialization
+        self.get_logger().info(
+            f'{node_name} initialized for {sensor_type} sensor. '
+            f'Publishing at {self.publish_rate}Hz to {sensor_type}_data topic.'
+        )
+
+    def initialize_sensor_parameters(self):
+        """
+        Placeholder method for sensor-specific parameter initialization
+
+        Override this method in subclasses to declare and initialize
+        sensor-specific parameters.
+        """
+        # Example: Declare sensor-specific parameters
+        # self.declare_parameter('sensor_gain', 1.0)
+        # self.declare_parameter('sensor_offset', 0.0)
+        pass
+
+    def get_sensor_message_type(self):
+        """
+        Return the appropriate ROS 2 message type for this sensor
+
+        Override this method in subclasses to return the correct message type
+        (e.g., LaserScan, Imu, NavSatFix, etc.)
+
+        Returns:
+            ROS message type class
+        """
+        # Default to Float32 - override in subclasses
+        return Float32
+
+    def get_qos_profile(self) -> QoSProfile:
+        """
+        Return appropriate QoS profile for this sensor type
+
+        Override this method to return different QoS profiles based on
+        the sensor requirements (real-time vs. reliable, etc.)
+
+        Returns:
+            QoSProfile appropriate for the sensor
+        """
+        # Default QoS profile - override based on requirements
+        return QoSProfile(
+            depth=10,
+            reliability=ReliabilityPolicy.RELIABLE,
+            durability=DurabilityPolicy.VOLATILE
+        )
+
+    def acquire_sensor_data(self) -> Optional[Any]:
+        """
+        Placeholder method for acquiring sensor data
+
+        Override this method in subclasses to implement the actual
+        sensor data acquisition logic. This could involve:
+        - Reading from hardware sensors
+        - Processing data from other nodes
+        - Simulating sensor data
+        - Fetching data from external sources
+
+        Returns:
+            Raw sensor data or None if acquisition failed
+        """
+        # Default implementation - override with actual sensor acquisition
+        self.get_logger().warn('acquire_sensor_data method not implemented')
+        return None
+
+    def process_sensor_data(self, raw_data: Any) -> Optional[Any]:
+        """
+        Process raw sensor data into a format suitable for ROS message
+
+        Override this method to implement sensor-specific data processing
+        (calibration, filtering, transformation, etc.)
+
+        Args:
+            raw_data: Raw data from acquire_sensor_data
+
+        Returns:
+            Processed data ready for message creation or None if processing failed
+        """
+        # Default implementation - just return raw data
+        # Override with actual processing logic
+        return raw_data
+
+    def create_sensor_message(self, processed_data: Any) -> Optional[Any]:
+        """
+        Create a ROS 2 message from processed sensor data
+
+        Override this method to create the appropriate message type
+        based on the sensor data.
+
+        Args:
+            processed_data: Data that has been processed by process_sensor_data
+
+        Returns:
+            ROS message ready for publishing or None if creation failed
+        """
+        # Default implementation - create a Float32 message
+        # Override with sensor-specific message creation
+        if processed_data is not None:
+            msg = Float32()
+            msg.data = float(processed_data) if isinstance(processed_data, (int, float)) else 0.0
+            return msg
+        return None
+
+    def format_diagnostic_message(self, processed_data: Any) -> Optional[String]:
+        """
+        Create a diagnostic message for this sensor
+
+        Override this method to create sensor-specific diagnostic information
+
+        Args:
+            processed_data: Data that has been processed by process_sensor_data
+
+        Returns:
+            Diagnostic message or None if creation failed
+        """
+        if processed_data is not None:
+            diag_msg = String()
+            diag_msg.data = f'Sensor {self.sensor_type}: Data acquired successfully, value: {processed_data}'
+            return diag_msg
+        return None
+
+    def acquire_and_publish_data(self):
+        """
+        Main callback for the timer - acquires data and publishes it
+        """
+        try:
+            # Acquire raw sensor data
+            raw_data = self.acquire_sensor_data()
+
+            if raw_data is not None:
+                # Process the raw data
+                processed_data = self.process_sensor_data(raw_data)
+
+                if processed_data is not None:
+                    # Create the sensor message
+                    sensor_msg = self.create_sensor_message(processed_data)
+
+                    if sensor_msg is not None:
+                        # Add timestamp and frame ID if appropriate
+                        if hasattr(sensor_msg, 'header'):
+                            sensor_msg.header.stamp = self.get_clock().now().to_msg()
+                            sensor_msg.header.frame_id = self.frame_id
+
+                        # Publish the sensor data
+                        with self._data_lock:
+                            self.sensor_publisher.publish(sensor_msg)
+                            self._last_sensor_data = processed_data
+                            self._last_timestamp = time.time()
+                            self._data_count += 1
+
+                        # Log if debug is enabled
+                        if self.enable_debug:
+                            self.get_logger().debug(f'Published sensor data: {processed_data}')
+
+                    # Optionally publish diagnostic information
+                    if self.diagnostic_publisher is not None:
+                        diag_msg = self.format_diagnostic_message(processed_data)
+                        if diag_msg is not None:
+                            self.diagnostic_publisher.publish(diag_msg)
+                else:
+                    self.get_logger().warn('Processing of sensor data failed')
+            else:
+                self.get_logger().warn('Acquisition of sensor data failed')
+
+        except Exception as e:
+            self.get_logger().error(f'Error in acquire_and_publish_data: {str(e)}')
+
+    def get_last_sensor_data(self) -> tuple:
+        """
+        Get the last sensor data and timestamp (thread-safe)
+
+        Returns:
+            Tuple of (last_data, last_timestamp) or (None, None) if no data
+        """
+        with self._data_lock:
+            return self._last_sensor_data, self._last_timestamp
+
+    def get_statistics(self) -> dict:
+        """
+        Get sensor statistics
+
+        Returns:
+            Dictionary with sensor statistics
+        """
+        with self._data_lock:
+            return {
+                'data_count': self._data_count,
+                'publish_rate_actual': self.publish_rate,
+                'sensor_type': self.sensor_type,
+                'frame_id': self.frame_id
+            }
+
+    def on_shutdown(self):
+        """
+        Cleanup method called when node is shutting down
+        Override this method to implement sensor-specific cleanup
+        """
+        self.get_logger().info(f'{self.get_name()} shutdown requested')
+
+
+# Example specialization: IMU Sensor Node
+class IMUSensorNode(ROSSensorNodeTemplate):
+    """
+    Specialized ROS 2 Sensor Node for IMU sensors
+    """
+
+    def __init__(self):
+        super().__init__(
+            node_name='imu_sensor_node',
+            sensor_type='imu'
+        )
+
+        # Declare IMU-specific parameters
+        self.declare_parameter('imu_orientation_covariance', [-1.0])  # -1 = unknown
+        self.declare_parameter('imu_angular_velocity_covariance', [-1.0])
+        self.declare_parameter('imu_linear_acceleration_covariance', [-1.0])
+
+    def get_sensor_message_type(self):
+        """Return the IMU message type"""
+        return Imu
+
+    def get_qos_profile(self):
+        """Return QoS profile appropriate for IMU data (high frequency)"""
+        return QoSProfile(
+            depth=5,
+            reliability=ReliabilityPolicy.BEST_EFFORT,
+            durability=DurabilityPolicy.VOLATILE
+        )
+
+    def acquire_sensor_data(self):
+        """
+        Example IMU data acquisition
+        In a real implementation, this would interface with actual IMU hardware
+        """
+        # Simulate IMU data for example purposes
+        import random
+        return {
+            'orientation': {
+                'x': random.uniform(-1.0, 1.0),
+                'y': random.uniform(-1.0, 1.0),
+                'z': random.uniform(-1.0, 1.0),
+                'w': random.uniform(-1.0, 1.0)
+            },
+            'angular_velocity': {
+                'x': random.uniform(-1.0, 1.0),
+                'y': random.uniform(-1.0, 1.0),
+                'z': random.uniform(-1.0, 1.0)
+            },
+            'linear_acceleration': {
+                'x': random.uniform(-9.81, 9.81),
+                'y': random.uniform(-9.81, 9.81),
+                'z': random.uniform(-9.81, 9.81)
+            }
+        }
+
+    def create_sensor_message(self, processed_data):
+        """Create an IMU message from processed data"""
+        if processed_data and isinstance(processed_data, dict):
+            msg = Imu()
+
+            # Set orientation
+            if 'orientation' in processed_data:
+                orient = processed_data['orientation']
+                msg.orientation.x = orient['x']
+                msg.orientation.y = orient['y']
+                msg.orientation.z = orient['z']
+                msg.orientation.w = orient['w']
+
+            # Set angular velocity
+            if 'angular_velocity' in processed_data:
+                ang_vel = processed_data['angular_velocity']
+                msg.angular_velocity.x = ang_vel['x']
+                msg.angular_velocity.y = ang_vel['y']
+                msg.angular_velocity.z = ang_vel['z']
+
+            # Set linear acceleration
+            if 'linear_acceleration' in processed_data:
+                lin_acc = processed_data['linear_acceleration']
+                msg.linear_acceleration.x = lin_acc['x']
+                msg.linear_acceleration.y = lin_acc['y']
+                msg.linear_acceleration.z = lin_acc['z']
+
+            # Set covariances if available as parameters
+            msg.orientation_covariance = self.get_parameter('imu_orientation_covariance').value
+            msg.angular_velocity_covariance = self.get_parameter('imu_angular_velocity_covariance').value
+            msg.linear_acceleration_covariance = self.get_parameter('imu_linear_acceleration_covariance').value
+
+            return msg
+
+        return None
+
+
+def main(args=None):
+    """
+    Main function to run the sensor node
+    """
+    rclpy.init(args=args)
+
+    # Create the sensor node (use IMUSensorNode as example)
+    sensor_node = IMUSensorNode()
+
+    try:
+        # Spin the node
+        rclpy.spin(sensor_node)
+    except KeyboardInterrupt:
+        sensor_node.get_logger().info('Keyboard interrupt received, shutting down')
+    finally:
+        # Cleanup
+        sensor_node.on_shutdown()
+        sensor_node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+```
+
+## Template Usage Guidelines
+
+### 1. Creating a New Sensor Node
+
+To create a new sensor node based on this template:
+
+1. Subclass `ROSSensorNodeTemplate`
+2. Override `get_sensor_message_type()` to return the appropriate message type
+3. Override `acquire_sensor_data()` to implement your sensor-specific acquisition logic
+4. Override `create_sensor_message()` to create the appropriate ROS message
+5. Optionally override other methods for custom behavior
+
+### 2. Parameter Configuration
+
+The template supports parameter configuration for:
+- Publish rate
+- Frame ID
+- Debug mode
+- Timeout durations
+- Sensor-specific parameters
+
+### 3. QoS Profiles
+
+The template allows customization of QoS profiles based on sensor requirements:
+- Reliable vs. best-effort
+- Volatile vs. transient-local durability
+- Queue depth
+
+### 4. Thread Safety
+
+The template includes thread-safe access to shared data using locks.
+
+## Customization Points
+
+The template is designed with the following customization points:
+
+1. **Message Type**: Override `get_sensor_message_type()` to specify the output message type
+2. **Data Acquisition**: Override `acquire_sensor_data()` to implement sensor-specific reading
+3. **Data Processing**: Override `process_sensor_data()` to implement calibration/filtering
+4. **QoS Profile**: Override `get_qos_profile()` to specify appropriate QoS settings
+5. **Diagnostic Info**: Override `format_diagnostic_message()` to provide custom diagnostics
+6. **Cleanup**: Override `on_shutdown()` to implement sensor-specific cleanup
+
+## Benefits of This Template
+
+1. **Reusability**: Easily create new sensor nodes by specializing the template
+2. **Consistency**: All sensor nodes follow the same structure and patterns
+3. **Best Practices**: Implements ROS 2 best practices out of the box
+4. **Maintainability**: Clear separation of concerns and well-documented code
+5. **Scalability**: Designed to handle different types of sensors with varying requirements
+
+## Summary
+
+This ROS 2 Sensor Node Template provides a robust foundation for creating sensor nodes that can be customized for different sensor types. The template follows ROS 2 best practices and includes placeholder methods for initialization, data acquisition, and message publishing that are well-commented for future re-use as customizable **Skills/Subagents**. The template enables rapid development of sensor nodes while maintaining consistency and quality across different implementations.
