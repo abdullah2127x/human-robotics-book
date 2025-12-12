@@ -23,31 +23,31 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Module 1: The Robotic Nervous System (ROS 2)',
+      link: {type: 'doc', id: 'module1/index'},
       items: [
-        'module1/index',
         {
           type: 'category',
-          label: 'Core Concepts',
+          label: 'Chapter 1: Core Concepts',
+          link: {type: 'doc', id: 'module1/core-concepts/index'},
           items: [
-            'module1/core-concepts/index',
             'module1/core-concepts/pub-sub',
             'module1/core-concepts/parameters'
           ],
         },
         {
           type: 'category',
-          label: 'AI Collaboration',
+          label: 'Chapter 2: AI Collaboration',
+          link: {type: 'doc', id: 'module1/agent-bridge/index'},
           items: [
-            'module1/agent-bridge/index',
             'module1/agent-bridge/rclpy-intro',
             'module1/agent-bridge/launch-files'
           ],
         },
         {
           type: 'category',
-          label: 'Component Design',
+          label: 'Chapter 3: Component Design',
+          link: {type: 'doc', id: 'module1/design/index'},
           items: [
-            'module1/design/index',
             'module1/design/node-template',
             'module1/design/mini-controller-spec',
             'module1/design/mini-controller-impl'
@@ -58,11 +58,13 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Module 2: Digital Twins',
+      link: {type: 'doc', id: 'module2/digital-twin'},
       items: ['module2/digital-twin'],
     },
     {
       type: 'category',
       label: 'Module 3: AI Reasoning',
+      link: {type: 'doc', id: 'module3/ai-reasoning'},
       items: ['module3/ai-reasoning'],
     },
   ],
