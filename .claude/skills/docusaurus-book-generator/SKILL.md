@@ -17,8 +17,8 @@ Generate a fully configured Docusaurus book website with Tailwind CSS, TypeScrip
 
 ### 1. Project Initialization
 - Run `npx create-docusaurus@latest book-source classic --typescript` to create a new Docusaurus v3 project
-- Install Tailwind CSS with PostCSS configuration (`npm install -D tailwindcss postcss autoprefixer`)
-- Initialize Tailwind config: `npx tailwindcss init -p`
+- Install Tailwind CSS v4 with PostCSS plugin (`npm install -D tailwindcss @tailwindcss/postcss autoprefixer`)
+- Note: Tailwind v4 does NOT use `tailwind.config.js` or `postcss.config.js` - configuration is done via CSS and Docusaurus plugins
 
 ### 2. Dynamic Configuration Setup
 - **Title Generation**: If user provides main title, automatically generate:
@@ -29,10 +29,21 @@ Generate a fully configured Docusaurus book website with Tailwind CSS, TypeScrip
 - Update `docusaurus.config.ts` with provided/configured title, tagline, and metadata
 - Configure proper GitHub Pages settings (organizationName, projectName, baseUrl) based on provided GitHub details
 
-### 3. Styling Configuration
-- Configure `tailwind.config.js` with appropriate content paths
-- Update `src/css/custom.css` to include Tailwind directives (`@tailwind base; @tailwind components; @tailwind utilities;`)
-- Add any custom brand colors or styling
+### 3. Styling Configuration (Tailwind CSS v4)
+- **CRITICAL CHANGE**: Tailwind v4 uses a completely different configuration approach than v3
+- Do NOT create `postcss.config.js` or `tailwind.config.js` - these are not used in v4
+- Add PostCSS plugin configuration directly in `docusaurus.config.ts` using the `plugins` array with `configurePostCss` hook
+- Update `src/css/custom.css` to use selective imports:
+  ```css
+  @import "tailwindcss/theme" layer(theme);
+  @import "tailwindcss/utilities" layer(utilities);
+  ```
+  - **CRITICAL:** Import ONLY theme and utilities layers, NOT the base layer
+  - `tailwindcss/theme` = CSS variables for colors, spacing, fonts
+  - `tailwindcss/utilities` = Utility classes (bg-*, text-*, p-*, etc.)
+  - Skipping `tailwindcss/base` prevents CSS reset from breaking Docusaurus layout
+  - Without this selective import, all Docusaurus styling will be destroyed
+- Add any custom brand colors or styling to CSS variables in custom.css
 
 ### 4. Content Cleanup
 - Remove all default Docusaurus tutorial content (tutorial-basics, tutorial-extras)
