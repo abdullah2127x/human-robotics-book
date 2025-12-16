@@ -1,11 +1,11 @@
 ---
 id: "0001"
 title: Docusaurus Book Structure Setup
-stage: general
+stage: misc
 date: 2025-12-16
 surface: agent
 model: claude-sonnet-4-5-20250929
-feature: none
+feature: docusaurus-book-structure-setup
 branch: main
 user: Abdullah Qureshi
 command: book-scaffolding skill
