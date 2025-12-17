@@ -3,7 +3,12 @@
     "allow": [
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(.specify/scripts/bash/setup-plan.sh:*)",
+      "SlashCommand(/sp.tasks 001-voice-to-action)",
+      "SlashCommand(/sp.implement)"
     ]
   }
 }

@@ -1,0 +1,10 @@
+{
+  "label": "Part 1: The Robotic Nervous System",
+  "position": 2,
+  "link": {
+    "type": "doc",
+    "id": "Part-1-ROS2-Foundation/index"
+  },
+  "collapsible": true,
+  "collapsed": false
+}
