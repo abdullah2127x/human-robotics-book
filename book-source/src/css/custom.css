@@ -2,32 +2,129 @@
 @import "tailwindcss/utilities" layer(utilities);
 
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Physical AI & Humanoid Robotics - Custom Theme
+ * Minimalist, modern design with green accent
  */
 
-/* You can override the default Infima variables here. */
+/* Light Mode */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-color-primary: #00aa55;
+  --ifm-color-primary-dark: #009a4d;
+  --ifm-color-primary-darker: #008f48;
+  --ifm-color-primary-darkest: #00753b;
+  --ifm-color-primary-light: #00ba5d;
+  --ifm-color-primary-lighter: #00c562;
+  --ifm-color-primary-lightest: #00df6f;
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --ifm-font-family-monospace: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --ifm-heading-font-weight: 500;
+  --ifm-font-weight-semibold: 500;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 170, 85, 0.1);
+  --ifm-background-color: #fafafa;
+  --ifm-background-surface-color: #f0f0f0;
+  --ifm-navbar-background-color: #fafafa;
+  --ifm-footer-background-color: #0a0a0a;
+  --ifm-footer-color: #fafafa;
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
+/* Dark Mode */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #00ff88;
+  --ifm-color-primary-dark: #00e67a;
+  --ifm-color-primary-darker: #00d973;
+  --ifm-color-primary-darkest: #00b35f;
+  --ifm-color-primary-light: #1aff94;
+  --ifm-color-primary-lighter: #33ff9f;
+  --ifm-color-primary-lightest: #66ffb8;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 255, 136, 0.1);
+  --ifm-background-color: #0a0a0a;
+  --ifm-background-surface-color: #111111;
+  --ifm-navbar-background-color: #0a0a0a;
+  --ifm-footer-background-color: #000000;
+}
+
+/* Global Typography */
+html {
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Navbar Styles */
+.navbar {
+  box-shadow: none;
+  border-bottom: 1px solid var(--ifm-toc-border-color);
+}
+
+.navbar__title {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Footer Styles */
+.footer {
+  border-top: 1px solid #222;
+}
+
+.footer--dark {
+  --ifm-footer-background-color: #000;
+}
+
+/* Code Block Styles */
+pre {
+  border: 1px solid var(--ifm-toc-border-color);
+}
+
+/* Sidebar Styles */
+.menu__link {
+  font-size: 0.9rem;
+}
+
+.menu__link--active {
+  font-weight: 500;
+}
+
+/* Link Styles */
+a {
+  transition: color 0.15s ease;
+}
+
+/* Button Styles */
+.button {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+}
+
+/* Table Styles */
+table {
+  font-size: 0.9rem;
+}
+
+th {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Blockquote Styles */
+blockquote {
+  border-left-color: var(--ifm-color-primary);
+  background: var(--ifm-background-surface-color);
+}
+
+/* Admonition Styles */
+.admonition {
+  border-left-width: 3px;
+}
+
+/* Selection */
+::selection {
+  background: var(--ifm-color-primary);
+  color: #000;
 }
