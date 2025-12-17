@@ -1,0 +1,8 @@
+{
+  "label": "Chapter 10: Voice-to-Action",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn to build voice command pipelines for humanoid robots using OpenAI Whisper, intent parsing, and ROS 2 integration."
+  }
+}
