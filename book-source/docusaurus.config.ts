@@ -32,11 +32,11 @@ const config: Config = {
   url: 'https://abdullah2127x.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/physical-ai-and-humanoid-robotics/',
+  baseUrl: '/human-robotics-book/',
 
   // GitHub pages deployment config.
   organizationName: 'abdullah2127x', // Usually your GitHub org/user name.
-  projectName: 'physical-ai-and-humanoid-robotics', // Usually your repo name.
+  projectName: 'human-robotics-book', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -56,7 +56,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Please change this to your repo.
           editUrl:
-            'https://github.com/abdullah2127x/physical-ai-and-humanoid-robotics/edit/main/book-source/docs/',
+            'https://github.com/abdullah2127x/human-robotics-book/edit/main/book-source/docs/',
         },
         blog: false, // Disable blog functionality for the book
         theme: {
@@ -86,7 +86,7 @@ const config: Config = {
           label: 'Book',
         },
         {
-          href: 'https://github.com/abdullah2127x/physical-ai-and-humanoid-robotics',
+          href: 'https://github.com/abdullah2127x/human-robotics-book',
           label: 'GitHub',
           position: 'right',
         },
@@ -109,7 +109,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/abdullah2127x/physical-ai-and-humanoid-robotics',
+              href: 'https://github.com/abdullah2127x/human-robotics-book',
             },
           ],
         },
