@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- TypeScript 5.6.2 with React 19.0.0 (001-rag-chatbot-widget)
+- SessionStorage (browser-native, persists chat history across page navigation within session) (001-rag-chatbot-widget)
+
+## Recent Changes
+- 001-rag-chatbot-widget: Added TypeScript 5.6.2 with React 19.0.0

@@ -8,7 +8,8 @@
       "Bash(wc:*)",
       "Bash(.specify/scripts/bash/setup-plan.sh:*)",
       "SlashCommand(/sp.tasks 001-voice-to-action)",
-      "SlashCommand(/sp.implement)"
+      "SlashCommand(/sp.implement)",
+      "Bash(.specify/scripts/bash/create-phr.sh:*)"
     ]
   }
 }
