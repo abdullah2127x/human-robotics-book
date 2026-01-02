@@ -1,0 +1,80 @@
+# Component Structure Template for Chatbot Generator
+
+name: "ChatWidget Component Structure"
+version: "1.0"
+
+structure:
+  root:
+    - "docs/"
+    - "src/"
+    - "README.md"
+
+  docs:
+    - "spec.md"          # Specification document
+    - "plan.md"          # Implementation plan
+    - "tasks.md"         # Task breakdown
+
+  src:
+    - "components/"
+
+  components:
+    - "ChatWidget/"
+
+  ChatWidget:
+    - "ChatWidget.tsx"           # Main component with all functionality
+    - "ChatWidget.module.css"    # Component-specific styles using existing theme vars
+    - "types.ts"                 # TypeScript interfaces
+    - "utils.ts"                 # Helper functions
+    - "index.ts"                 # Export file
+
+files:
+  ChatWidget.tsx:
+    description: "Main chatbot component with session management, text selection, and API integration"
+    features:
+      - "Session initialization and management"
+      - "Text selection with floating action button"
+      - "Message history with localStorage fallback"
+      - "Loading states and error handling"
+      - "Responsive design and accessibility"
+
+  ChatWidget.module.css:
+    description: "Component styles using existing project theme variables"
+    features:
+      - "Uses existing CSS custom properties"
+      - "Responsive layout"
+      - "Accessible color contrast"
+      - "Platform-appropriate styling"
+
+  types.ts:
+    description: "TypeScript interfaces for chatbot functionality"
+    features:
+      - "Message interface"
+      - "Citation interface"
+      - "Chat session interface"
+      - "Component props interface"
+
+  utils.ts:
+    description: "Helper functions for chatbot functionality"
+    features:
+      - "API request helpers"
+      - "Message formatting utilities"
+      - "Theme variable utilities"
+      - "Text selection helpers"
+
+  index.ts:
+    description: "Export configuration for the component"
+    features:
+      - "Named exports"
+      - "Default export"
+      - "Type declarations"
+
+documentation:
+  README.md:
+    sections:
+      - "Component overview"
+      - "Installation and setup"
+      - "Usage examples"
+      - "Configuration options"
+      - "Theming guidelines"
+      - "Integration instructions"
+      - "Troubleshooting"
